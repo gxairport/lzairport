@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding= "UTF-8"?>
+<project name="LZAirportAis" >
+
+<!-- properies -->
+	<property name="src.dir" value="src" />
+    <property name="classes.dir" value="bin" />
+	<property name="dist_jar.dir" value="jar"/>
+	<property name="dist_checkin.dir"  value="../com.lzairport.ais.checkin/lib/ais"/>
+	<property name="dist_telex.dir"  value="../com.lzairport.ais.telex/lib/ais"/>
+	<property name="dist_rtu.dir"  value="../RtuServer/lib/ais"/>
+	<property name="DataCollect.dir"  value="../DataCollect/lib/ais"/>
+	<property name="dist_AisStatistics.dir"  value="../Ais_Statistics/libs"/>
+	<property name="dist_AisSettlement.dir"  value="../Ais_Settlement/libs"/>
+	<property name="EJB.dir"  value="D:/EAP-6.3.0/jboss-eap-6.3/standalone/deployments"/>
+    <target name="init">
+    	<mkdir	dir="${classes.dir}"/>
+    	<mkdir dir="${dist_jar.dir}"/>
+    </target>
+
+	<target	name="compile" depends="init" >
+		<javac source="1.8" 
+			   target="1.8"
+			   srcdir="${src.dir}"
+			   destdir="${classes.dir}"
+			   includeantruntime="false"/>
+	</target>
+
+<!-- 打包成jar -->
+     <target name="pack" depends="compile" description="make .jar file">
+	     	<!-- 通用的Ais的Jar文件，实体、Dao,Service,异常，Jms等 -->
+     		<jar destfile="${dist_jar.dir}/AisCommon.jar" >
+    			 <fileset dir="${classes.dir}" includes="**com/lzairport/ais/dao/impl/QueryConditions.class"/>
+    			 <fileset dir="${classes.dir}" includes="**com/lzairport/ais/dao/impl/AisOrder.class"/>
+    			 			 <fileset dir="${classes.dir}" includes="**com/lzairport/ais/dao/IDao.class"/>
+    			 <fileset dir="${classes.dir}" includes="**com/lzairport/ais/tableviewer/base/TableViewerService.class"/>
+    			 <fileset dir="${classes.dir}" includes="**/com/nngairport/ais/service/datacollect/**/*.class"
+    			     excludes="**/com/nngairport/ais/datacollect/service/impl/*.class"/>
+    			 <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/service/**/*.class"
+    			     excludes="**/com/lzairport/ais/service/impl/*.class,
+    			     		   **/com/lzairport/ais/service/telex/impl/*.class,
+    			     		   **/com/lzairport/ais/service/aodb/impl/*.class,
+                               **/com/lzairport/ais/service/settlement/impl/**/*.class,
+    			 			   **/com/lzairport/ais/service/statistics/impl/**/*.class,
+    			 			   **/com/lzairport/ais/service/statistics/forecast/impl/*.class,
+							   **/com/lzairport/ais/service/settlement/forecast/impl/*.class,	  		  		 			      	 			       
+    			 			   **/com/lzairport/ais/service/settlement/price/*.class,
+    			 			   **/com/lzairport/ais/service/settlement/price/forecast/*.class"/>
+ 				 <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/vo/*.class"
+ 				     excludes="**/com/lzairport/ais/vo/convert/*.class"/>    			 			 
+    			 <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/models/**/*.class"/>
+    			 <fileset dir="${classes.dir}" includes="**/com/nngairport/ais/models/datacollect/**/*.class"/>
+    			 <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/jms/**/*.class"/>
+     			 <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/utils/**/*.class"/>
+  	             <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/exception/**/*.class"/>
+	             <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/contentchange/**/*.class"/>
+     		</jar>
+	     	<!-- 对Rcp的扩展的Ais的Jar文件-->
+	 		<jar destfile="${dist_jar.dir}/AisRcpExtended.jar" >
+    			 <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/*.class"/>
+	   			 <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/dialog/**/*.class"/>
+	   			 <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/preferencePages/**/*.class"/>
+	 			 <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/tableviewer/**/*.class"/>	 
+	 			 <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/tablecolor/**/*.class"/>
+ 			</jar>
+     		<!-- 对串口的Ais的Jar文件-->
+	 		<jar destfile="${dist_jar.dir}/AisSerial.jar" >
+ 				 <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/comm/**/*.class"/>
+ 			</jar>
+ 			<!-- 对Ais的EJB文件-->
+           <jar destfile="${dist_jar.dir}/AisEJB.jar" >
+			    <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/vo/**/*.class"/>    			 			 
+	  		    <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/tableviewer/base/TableViewerService.class"/>	 
+	            <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/tableviewer/header/*.class"/>
+	            <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/exception/*.class"/>
+	            <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/contentchange/*.class"/>
+	            <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/dao/**/*.class"/>
+	  		    <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/service/**/*.class"/>
+			    <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/models/**/*.class"/>
+	            <fileset dir="${classes.dir}" includes="**/com/nngairport/ais/dao/**/*.class"/>
+	  		    <fileset dir="${classes.dir}" includes="**/com/nngairport/ais/service/**/*.class"/>
+			    <fileset dir="${classes.dir}" includes="**/com/nngairport/ais/models/**/*.class"/>
+			    <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/jms/**/*.class"/>
+	            <fileset dir="${classes.dir}" includes="**/com/lzairport/ais/webservice/**/*.class"/>
+             	<fileset dir="${classes.dir}" includes="**/com/lzairport/ais/utils/*.class"
+             	excludes="**/com/lzairport/ais/utils/TransChineseMoneyScriptlet.class"/>
+	            <fileset dir="${src.dir}" includes="META-INF/*.*"/>
+            <manifest>
+				<attribute name ="Dependencies"  value ="org.eclipse.swt,org.apache.commons.beanutils,com.thoughtworks.xstream"/>
+			</manifest>	            
+           </jar>
+    </target>   
+    
+    <target name="deploy"  depends="pack">
+    	<copy file="${dist_jar.dir}/AisCommon.jar"  tofile="${dist_telex.dir}/AisCommon.jar" overwrite="true"/>
+    	<copy file="${dist_jar.dir}/AisRcpExtended.jar"  tofile="${dist_telex.dir}/AisRcpExtended.jar" overwrite="true"/>
+    	<copy file="${dist_jar.dir}/AisSerial.jar"  tofile="${dist_telex.dir}/AisSerial.jar" overwrite="true"/>
+    	<copy file="${dist_jar.dir}/AisCommon.jar"  tofile="${dist_rtu.dir}/AisCommon.jar" overwrite="true"/>
+    	<copy file="${dist_jar.dir}/AisRcpExtended.jar"  tofile="${dist_rtu.dir}/AisRcpExtended.jar" overwrite="true"/>
+    	<copy file="${dist_jar.dir}/AisCommon.jar"  tofile="${DataCollect.dir}/AisCommon.jar" overwrite="true"/>
+    	<copy file="${dist_jar.dir}/AisRcpExtended.jar"  tofile="${DataCollect.dir}/AisRcpExtended.jar" overwrite="true"/>
+    	<copy file="${dist_jar.dir}/AisCommon.jar"  tofile="${dist_checkin.dir}/AisCommon.jar" overwrite="true"/>
+    	<copy file="${dist_jar.dir}/AisRcpExtended.jar"  tofile="${dist_checkin.dir}/AisRcpExtended.jar" overwrite="true"/>
+    	<copy file="${dist_jar.dir}/AisEJB.jar"  tofile="${EJB.dir}/AisEJB.jar" overwrite="true"/>
+    	<copy file="${dist_jar.dir}/AisCommon.jar"  tofile="${dist_AisStatistics.dir}/AisCommon.jar" overwrite="true"/>
+    	<copy file="${dist_jar.dir}/AisCommon.jar"  tofile="${dist_AisSettlement.dir}/AisCommon.jar" overwrite="true"/>
+</target>
+    
+    
+
+</project>

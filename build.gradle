@@ -1,0 +1,26 @@
+
+
+apply plugin: 'java'
+
+sourceSets.main.java.srcDir 'src' // 设置 Java 源码所在目录
+
+repositories {
+   mavenCentral()
+ 
+   maven { url "http://dev.mapfish.org/maven/repository/" } 
+   maven { url "http://jasperreports.sourceforge.net/maven2" } 
+}
+
+dependencies {
+    compile 'org.springframework:spring-context:4.2.1.RELEASE'
+	compile 'org.hibernate:hibernate-jpamodelgen:5.0.1.Final:'
+    compile 'javax:javaee-api:6.0'
+    compile 'org.dom4j:dom4j:+'
+    compile 'com.thoughtworks.xstream:xstream:+'
+    compile 'commons-beanutils:commons-beanutils:+'
+     compile 'org.apache.commons:commons-lang3:+'
+    compile 'net.sf.jasperreports:jasperreports:+'
+    compile fileTree(dir: 'lib', include: '*/*.jar')
+
+}
+
